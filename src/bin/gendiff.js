@@ -1,9 +1,14 @@
 #!/usr/bin/env node
-import help from '..';
+import fillProgram from '..';
 import program from 'commander';
 
-program.on('--help', help(program));
+fillProgram(program);
+
+const programHelp = program.help;
+program.parseOptions(process.argv);
 program.parse(process.argv);
-if (program.help) {
+
+if (typeof program.help === 'boolean' && program.help === true) {
+  program.help = programHelp;
   program.help();
 }

@@ -3,3 +3,4 @@
 [![Build Status](https://travis-ci.com/MolchanovVadim/project-lvl2-s345.svg?branch=master)](https://travis-ci.com/MolchanovVadim/project-lvl2-s345)
 [![asciicast](https://asciinema.org/a/3WJEvSVdy9Lu1QygVpqgagwyO.png)](https://asciinema.org/a/3WJEvSVdy9Lu1QygVpqgagwyO)
 [![asciicast](https://asciinema.org/a/YvGYASTJRQWmHx1bQ3Vw1dTpT.png)](https://asciinema.org/a/YvGYASTJRQWmHx1bQ3Vw1dTpT)
+[![asciicast](https://asciinema.org/a/SzvmruOL0NLOvsw3vOy46kUwW.png)](https://asciinema.org/a/SzvmruOL0NLOvsw3vOy46kUwW)

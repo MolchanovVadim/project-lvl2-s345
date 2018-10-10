@@ -20,3 +20,12 @@ test('gen diff yml', () => {
   expect(genDiff(pathFile1, pathFile2))
     .toBe(getResult(pathFileRes));
 });
+
+test('gen diff ini', () => {
+  const pathFile1 = '__tests__/__fixtures__/before.ini';
+  const pathFile2 = '__tests__/__fixtures__/after.ini';
+  const pathFileRes = '__tests__/__fixtures__/result1';
+
+  expect(genDiff(pathFile1, pathFile2))
+    .toBe(getResult(pathFileRes));
+});

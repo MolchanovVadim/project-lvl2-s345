@@ -11,37 +11,34 @@ export const parse = (obj1, obj2) => {
     };
     if (_.has(obj1, key) && !_.has(obj2, key)) {
       node.value = obj1[key];
-      node.type = 'remove';
+      node.type = 'removed';
     } else if (!_.has(obj1, key) && _.has(obj2, key)) {
       node.value = obj2[key];
-      node.type = 'add';
+      node.type = 'added';
     } else if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-      node.type = 'save';
+      node.type = 'unchanged';
       node.children = parse(obj1[key], obj2[key]);
     } else if (obj1[key] === obj2[key]) {
-      node.type = 'save';
+      node.type = 'unchanged';
       node.value = obj1[key];
     } else {
-      node.type = 'changeBefore';
-      node.value = obj1[key];
-      const node2 = {
-        key, type: 'changeAfter', value: obj2[key], children: [],
-      };
-      return [node, node2];
+      node.type = 'changed';
+      node.valueBefore = obj1[key];
+      node.valueAfter = obj2[key];
     }
     return node;
   };
 
-  return _.flatten(_.union(_.keys(obj1), _.keys(obj2))
-    .map(key => buildNode(key)));
+  return _.union(_.keys(obj1), _.keys(obj2))
+    .map(key => buildNode(key));
 };
 
 const propertyRender = {
-  remove: '-',
-  add: '+',
-  save: ' ',
-  changeBefore: '-',
-  changeAfter: '+',
+  removed: '-',
+  added: '+',
+  unchanged: ' ',
+  changedBefore: '-',
+  changedAfter: '+',
 };
 
 const renderValue = (node, level) => Object.keys(node).map((key) => {
@@ -57,20 +54,35 @@ const render = (listNodes) => {
   const iter = (nodes, level = 0) => _.flatten(nodes.map((node) => {
     const {
       key,
-      value,
       type,
       children,
     } = node;
-    if (children.length === 0) {
-      if (_.isObject(value)) {
-        return [`${' '.repeat(level * 4)}  ${propertyRender[type]} ${key}: {`,
-          ...renderValue(value, level + 1), `${' '.repeat(level * 4)}    }`];
-      }
-      return `${' '.repeat(level * 4)}  ${propertyRender[type]} ${key}: ${value}`;
+    if (children.length > 0) {
+      return [`${' '.repeat(level * 4)}  ${propertyRender[type]} ${key}: {`,
+        ...iter(children, level + 1),
+        `${' '.repeat(level * 4)}    }`];
     }
-    return [`${' '.repeat(level * 4)}  ${propertyRender[type]} ${key}: {`,
-      ...iter(children, level + 1),
-      `${' '.repeat(level * 4)}    }`];
+    if (type === 'changed') {
+      const renderChanged = [];
+      if (_.isObject(node.valueBefore)) {
+        renderChanged.push([`${' '.repeat(level * 4)}  ${propertyRender.changedBefore} ${key}: {`,
+          ...renderValue(node.valueBefore, level + 1), `${' '.repeat(level * 4)}    }`]);
+      } else {
+        renderChanged.push(`${' '.repeat(level * 4)}  ${propertyRender.changedBefore} ${key}: ${node.valueBefore}`);
+      }
+      if (_.isObject(node.valueAfter)) {
+        renderChanged.push([`${' '.repeat(level * 4)}  ${propertyRender.changedAfter} ${key}: {`,
+          ...renderValue(node.valueAfter, level + 1), `${' '.repeat(level * 4)}    }`]);
+      } else {
+        renderChanged.push(`${' '.repeat(level * 4)}  ${propertyRender.changedAfter} ${key}: ${node.valueAfter}`);
+      }
+      return _.flatten(renderChanged);
+    }
+    if (_.isObject(node.value)) {
+      return [`${' '.repeat(level * 4)}  ${propertyRender[type]} ${key}: {`,
+        ...renderValue(node.value, level + 1), `${' '.repeat(level * 4)}    }`];
+    }
+    return `${' '.repeat(level * 4)}  ${propertyRender[type]} ${key}: ${node.value}`;
   }));
 
   const result = iter(listNodes);

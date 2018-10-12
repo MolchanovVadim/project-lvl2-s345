@@ -2,33 +2,32 @@ import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import parseData from './parsers';
-import render from './renderers/render';
-import renderPlain from './renderers/renderPlain';
+import render from './renderers';
 
 export const parse = (obj1, obj2) => {
   const buildNode = (key) => {
     if (_.has(obj1, key) && !_.has(obj2, key)) {
       return {
-        key, value: obj1[key], type: 'removed', children: [],
+        key, valueBefore: obj1[key], type: 'removed',
       };
     }
     if (!_.has(obj1, key) && _.has(obj2, key)) {
       return {
-        key, value: obj2[key], type: 'added', children: [],
+        key, valueAfter: obj2[key], type: 'added',
       };
     }
     if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
       return {
-        key, type: 'unchanged', children: parse(obj1[key], obj2[key]),
+        key, type: 'nested', children: parse(obj1[key], obj2[key]),
       };
     }
     if (obj1[key] === obj2[key]) {
       return {
-        key, value: obj1[key], type: 'unchanged', children: [],
+        key, valueBefore: obj1[key], type: 'unchanged',
       };
     }
     return {
-      key, valueBefore: obj1[key], valueAfter: obj2[key], type: 'changed', children: [],
+      key, valueBefore: obj1[key], valueAfter: obj2[key], type: 'changed',
     };
   };
 
@@ -45,9 +44,7 @@ const genDiff = (filePath1, filePath2, options) => {
   const obj1 = parseData(ext1, data1);
   const obj2 = parseData(ext2, data2);
 
-  if (options.format === 'json') return render(parse(obj1, obj2));
-  if (options.format === 'plain') return renderPlain(parse(obj1, obj2));
-  return 'this format is not supported';
+  return render(options.format, parse(obj1, obj2));
 };
 
 export default genDiff;

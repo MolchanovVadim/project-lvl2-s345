@@ -6,7 +6,7 @@ program
   .arguments('Usage: gendiff <firstConfig> <secondConfig>')
   .description('Compares two configuration files and shows a difference.')
   .option('-V, --version', 'output the version number')
-  .option('-f, --format [type]', 'Output format', 'json')
+  .option('-f, --format [type]', 'Output format', 'default')
   .action((filePath1, filePath2, options) => {
     console.log(genDiff(filePath1, filePath2, options));
   });

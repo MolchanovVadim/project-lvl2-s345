@@ -15,9 +15,8 @@ const fnRender = {
   removed: (node, level) => renderNode(node.key, node.valueBefore, level, '-'),
   added: (node, level) => renderNode(node.key, node.valueAfter, level, '+'),
   unchanged: (node, level) => renderNode(node.key, node.valueBefore, level, ' '),
-  nested: (node, level, iter) => [`${' '.repeat(level * 4)}    ${node.key}: {`,
-    ...iter(node.children, level + 1),
-    `${' '.repeat(level * 4)}    }`],
+  nested: (node, level, iter) => [`${tab(level)}    ${node.key}: {`,
+    ...iter(node.children, level + 1), `${tab(level)}    }`],
   changed: (node, level) => _.flatten([...fnRender.removed(node, level),
     ...fnRender.added(node, level)]),
 };

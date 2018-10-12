@@ -83,3 +83,12 @@ test('gen diff ini 3 plain', () => {
   expect(genDiff(pathFile1, pathFile2, { format: 'plain' }))
     .toBe(getResult(pathFileRes));
 });
+
+test('gen diff ini 4 json', () => {
+  const pathFile1 = '__tests__/__fixtures__/before.json';
+  const pathFile2 = '__tests__/__fixtures__/after.json';
+  const pathFileRes = '__tests__/__fixtures__/result4';
+
+  expect(genDiff(pathFile1, pathFile2, { format: 'json' }))
+    .toBe(getResult(pathFileRes));
+});

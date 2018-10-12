@@ -1,8 +1,8 @@
-import renderDefault from './renderMain';
+import renderCurly from './renderCurly';
 import renderPlain from './renderPlain';
 
 const render = {
-  default: renderDefault,
+  curly: renderCurly,
   plain: renderPlain,
   json: JSON.stringify,
 };

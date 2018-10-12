@@ -1,50 +1,25 @@
 import _ from 'lodash';
 
-const renderValue = (node, level) => Object.keys(node).map((key) => {
-  if (!_.isObject(node[key])) return `${' '.repeat(level * 4)}    ${key}: ${node[key]}`;
-  return [`${' '.repeat(level * 4)}    ${key}: {`,
-    ...renderValue(Object.keys(node[key]), level + 1),
-    `${' '.repeat(level * 4)}    }`];
-});
+const tab = level => `${' '.repeat(level * 4)}`;
+
+const renderNode = (key, value, level, prefix) => {
+  if (_.isObject(value)) {
+    return [`${tab(level)}  ${prefix} ${key}: {`,
+      ..._.flatten(Object.keys(value).map(keyObj => renderNode(keyObj, value[keyObj], level + 1, ' '))),
+      `${tab(level)}    }`];
+  }
+  return [`${tab(level)}  ${prefix} ${key}: ${value}`];
+};
 
 const fnRender = {
-  removed: (node, level) => {
-    if (_.isObject(node.valueBefore)) {
-      return [`${' '.repeat(level * 4)}  - ${node.key}: {`,
-        ...renderValue(node.valueBefore, level + 1), `${' '.repeat(level * 4)}    }`];
-    }
-    return `${' '.repeat(level * 4)}  - ${node.key}: ${node.valueBefore}`;
-  },
-  added: (node, level) => {
-    if (_.isObject(node.valueAfter)) {
-      return [`${' '.repeat(level * 4)}  + ${node.key}: {`,
-        ...renderValue(node.valueAfter, level + 1), `${' '.repeat(level * 4)}    }`];
-    }
-    return `${' '.repeat(level * 4)}  + ${node.key}: ${node.valueAfter}`;
-  },
-  unchanged: (node, level) => {
-    if (_.isObject(node.valueBefore)) {
-      return [`${' '.repeat(level * 4)}    ${node.key}: {`,
-        ...renderValue(node.valueBefore, level + 1), `${' '.repeat(level * 4)}    }`];
-    }
-    return `${' '.repeat(level * 4)}    ${node.key}: ${node.valueBefore}`;
-  },
+  removed: (node, level) => renderNode(node.key, node.valueBefore, level, '-'),
+  added: (node, level) => renderNode(node.key, node.valueAfter, level, '+'),
+  unchanged: (node, level) => renderNode(node.key, node.valueBefore, level, ' '),
   nested: (node, level, iter) => [`${' '.repeat(level * 4)}    ${node.key}: {`,
     ...iter(node.children, level + 1),
     `${' '.repeat(level * 4)}    }`],
-  changed: (node, level) => {
-    const renderBefore = _.isObject(node.valueBefore)
-      ? [`${' '.repeat(level * 4)}  - ${node.key}: {`,
-        ...renderValue(node.valueBefore, level + 1), `${' '.repeat(level * 4)}    }`]
-      : [`${' '.repeat(level * 4)}  - ${node.key}: ${node.valueBefore}`];
-
-    const renderAfter = _.isObject(node.valueAfter)
-      ? [`${' '.repeat(level * 4)}  + ${node.key}: {`,
-        ...renderValue(node.valueAfter, level + 1), `${' '.repeat(level * 4)}    }`]
-      : [`${' '.repeat(level * 4)}  + ${node.key}: ${node.valueAfter}`];
-
-    return _.flatten([...renderBefore, ...renderAfter]);
-  },
+  changed: (node, level) => _.flatten([...fnRender.removed(node, level),
+    ...fnRender.added(node, level)]),
 };
 
 const render = (listNodes) => {

@@ -8,7 +8,7 @@ test('gen diff json', () => {
   const pathFile2 = '__tests__/__fixtures__/after.json';
   const pathFileRes = '__tests__/__fixtures__/result1';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'curly' }))
+  expect(genDiff(pathFile1, pathFile2, 'curly'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -17,7 +17,7 @@ test('gen diff yml', () => {
   const pathFile2 = '__tests__/__fixtures__/after.yml';
   const pathFileRes = '__tests__/__fixtures__/result1';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'curly' }))
+  expect(genDiff(pathFile1, pathFile2, 'curly'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -26,7 +26,7 @@ test('gen diff ini', () => {
   const pathFile2 = '__tests__/__fixtures__/after.ini';
   const pathFileRes = '__tests__/__fixtures__/result1';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'curly' }))
+  expect(genDiff(pathFile1, pathFile2, 'curly'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -35,7 +35,7 @@ test('gen diff json 2', () => {
   const pathFile2 = '__tests__/__fixtures__/after2.json';
   const pathFileRes = '__tests__/__fixtures__/result2';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'curly' }))
+  expect(genDiff(pathFile1, pathFile2, 'curly'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -44,7 +44,7 @@ test('gen diff yml 2', () => {
   const pathFile2 = '__tests__/__fixtures__/after2.yml';
   const pathFileRes = '__tests__/__fixtures__/result2';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'curly' }))
+  expect(genDiff(pathFile1, pathFile2, 'curly'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -53,7 +53,7 @@ test('gen diff ini 2', () => {
   const pathFile2 = '__tests__/__fixtures__/after2.ini';
   const pathFileRes = '__tests__/__fixtures__/result2';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'curly' }))
+  expect(genDiff(pathFile1, pathFile2, 'curly'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -62,7 +62,7 @@ test('gen diff json 3 plain', () => {
   const pathFile2 = '__tests__/__fixtures__/after2.json';
   const pathFileRes = '__tests__/__fixtures__/result3';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'plain' }))
+  expect(genDiff(pathFile1, pathFile2, 'plain'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -71,7 +71,7 @@ test('gen diff yml 3 plain', () => {
   const pathFile2 = '__tests__/__fixtures__/after2.yml';
   const pathFileRes = '__tests__/__fixtures__/result3';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'plain' }))
+  expect(genDiff(pathFile1, pathFile2, 'plain'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -80,7 +80,7 @@ test('gen diff ini 3 plain', () => {
   const pathFile2 = '__tests__/__fixtures__/after2.ini';
   const pathFileRes = '__tests__/__fixtures__/result3';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'plain' }))
+  expect(genDiff(pathFile1, pathFile2, 'plain'))
     .toBe(getResult(pathFileRes));
 });
 
@@ -89,6 +89,6 @@ test('gen diff ini 4 json', () => {
   const pathFile2 = '__tests__/__fixtures__/after.json';
   const pathFileRes = '__tests__/__fixtures__/result4';
 
-  expect(genDiff(pathFile1, pathFile2, { format: 'json' }))
+  expect(genDiff(pathFile1, pathFile2, 'json'))
     .toBe(getResult(pathFileRes));
 });

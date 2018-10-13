@@ -4,7 +4,7 @@ import path from 'path';
 import parseData from './parsers';
 import render from './renderers';
 
-export const parse = (obj1, obj2) => {
+export const getAst = (obj1, obj2) => {
   const buildNode = (key) => {
     if (_.has(obj1, key) && !_.has(obj2, key)) {
       return {
@@ -18,7 +18,7 @@ export const parse = (obj1, obj2) => {
     }
     if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
       return {
-        key, type: 'nested', children: parse(obj1[key], obj2[key]),
+        key, type: 'nested', children: getAst(obj1[key], obj2[key]),
       };
     }
     if (obj1[key] === obj2[key]) {
@@ -35,7 +35,7 @@ export const parse = (obj1, obj2) => {
     .map(key => buildNode(key));
 };
 
-const genDiff = (filePath1, filePath2, options) => {
+const genDiff = (filePath1, filePath2, format) => {
   const data1 = fs.readFileSync(filePath1, 'utf8');
   const data2 = fs.readFileSync(filePath2, 'utf8');
   const ext1 = path.extname(filePath1);
@@ -44,7 +44,7 @@ const genDiff = (filePath1, filePath2, options) => {
   const obj1 = parseData(ext1, data1);
   const obj2 = parseData(ext2, data2);
 
-  return render(options.format, parse(obj1, obj2));
+  return render(format, getAst(obj1, obj2));
 };
 
 export default genDiff;
